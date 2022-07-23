@@ -16,10 +16,10 @@ const masterDeck = buildMasterDeck();
 let scores; 
 let winner;
 let choices;
-let shuffledDeck;
+// let shuffledDeck;
 let bank;
-let playerHand;
-let dealerHand;
+
+let players;
 
 // let handTotal; (dealer, player)
 
@@ -32,18 +32,26 @@ const scoresEl = {
     dealer: document.getElementById('d-score')
 };
 
-
 const choicesEl = {
     hit: document.getElementById('hitBtn'),
     stay: document.getElementById('stayBtn')
 };
 
+const handsEl = {
+    player: document.getElementById('p-hand'),
+    dealer: document.getElementById('d-hand')
+}
+
 const bankEl = document.querySelector('#money-remaining');
+
+// const playerEl = document.querySelector('#player');
 
 
 const shuffledContainerEl = document.getElementById('shuffled-deck-container');
 
 /*----- event listeners -----*/
+
+document.querySelector('#start').addEventListener('click', startGame);
 
 // document.getElementById('hitBtn').addEventListener('click', *function());
 
@@ -53,20 +61,6 @@ const shuffledContainerEl = document.getElementById('shuffled-deck-container');
 
 
 /*----- functions -----*/
-
-function shuffleDeck() {
-    // Create a copy of the masterDeck (leave masterDeck untouched!)
-    const tempDeck = [...masterDeck];
-    const newShuffleDeck = [];
-    while (tempDeck.length) {
-        // Get random index for a card still in the tempDeck
-        const rndIdx = Math.floor(Math.random() * tempDeck.length);
-
-        newShuffleDeck.push(tempDeck.splice(rndIdx, 1)[0]); // [0] placed after splice to return only the card object--otherwise splice will return array.
-    }                                            // ^ does this need to be 4 to draw 4 cards?
-    return newShuffleDeck;
-}
-
 function buildMasterDeck() {
     const deck = [];
     // Use nested forEach to generate card objects
@@ -83,55 +77,113 @@ function buildMasterDeck() {
     return deck;
 }
 
+function shuffleDeck() {
+    // Create a copy of the masterDeck (leave masterDeck untouched!)
+    const tempDeck = [...masterDeck];
+    const newShuffleDeck = [];
+    while (tempDeck.length) {
+        // Get random index for a card still in the tempDeck
+        const rndIdx = Math.floor(Math.random() * tempDeck.length);
+
+        newShuffleDeck.push(tempDeck.splice(rndIdx, 1)[0]); // [0] placed after splice to return only the card object--otherwise splice will return array.
+    }                                            // ^ does this need to be 4 to draw 4 cards?
+    return newShuffleDeck;
+}
+
+
 // initialize
 init()
 
 function init(){
     console.log('init function invoked')
 
+    buildMasterDeck();
     shuffleDeck();
 
-    scores = {
-        player: 0,
-        dealer: 0
+    players = {
+        user: {
+            score: 0,
+            hand: [],
+        },
+        dealer: {
+            score: 0,
+            hand: []
+        }
+    }
+ 
+    choices = {
+        hit: false,
+        stay: false
     }
 
     winner = null;
 
     bank = 500;
 
-    playerHand = [];
-
-    dealerHand = [];
-
     render()
 };
 
 console.log(init)
 
+
 function render(){
     // Take state variables and update the DOM with their values
 
     // Update the scores on the page 
-    scoresEl.player.innerText = scores.player;
-    scoresEl.dealer.innerText = scores.dealer;
+    scoresEl.player.innerText = players.user.score;
+    scoresEl.dealer.innerText = players.dealer.score;
 
     // update bank
     bankEl.innerText = bank;
 
+    for (let choice in choices) {
+        console.log(choice, "key name on object")
+        console.log(choices[choice], "<- choices[choice]")
+
+        // choicesEl[choice].hit
+    }
+
 }
 
+
+
 function startGame(){
+    
     dealHands();
 
 
 }
 
-function dealHands(){
-    // deal 2 each
 
+function dealHands(){
+    // deal 2 cards per party
+    // create a card variable
+
+    for (let i=0; i<2; i++) {
+
+        for (let x=0; x<2; x++) {
+            
+            let card = masterDeck.pop();
+            playerHand.push(card);
+            dealerHand.push(card);
+            renderCards(card, x);
+            newScores();
+        }
+    }
+    amendDeck();
 }
 
+// function newScores() {
+    
+// };
+
+function renderCards(){
+
+};
+
+// function amendDeck(){
+
+// };
 
 // hit()
 

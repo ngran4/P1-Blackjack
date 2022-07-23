@@ -14,22 +14,30 @@
     <h1>BLACKJACK</h1>
     
     <main>
-        <h2>PLAYER</h2>
-        <h2>DEALER</h2>
-        <h1 id="p-score"></h1>
-        <h1 id="d-score"></h1>
 
+        <button id="start">START</button>
+        
+        <!-- DEALER -->
+        <h2 id="dealer">DEALER</h2>
+        <h1 id="d-score"></h1>
+        <div id="d-hand"></div>
+
+        <h3 class="deck">Deck:</h3>
+
+        <!-- PLAYER -->
+        <h2 id="player">PLAYER</h2>
+        <h1 id="p-score"></h1>
+        <div id="p-hand"></div>
         <h3 class="bank">Bank: $</h3><h3 class="bank" id="money-remaining"></h3>
         
 
-        <h3 class="deck">Deck:</h3>
 
         <section id="master-deck-container" class="card-container"></section>
         <section id="shuffled-deck-container" class="card-container">
 
         <div class="btn">
             <!-- shuffle deck -->
-            <button id="btnStart" onclick="startgame()">START</button>
+            <button id="btnStart" onclick="startGame()">START</button>
 
             <button id="hitBtn" onclick="hit()">HIT</button>
             <button id="stayBtn" onclick="stay()">STAY</button>
@@ -40,11 +48,6 @@
                 <button id="coin-50" onclick="bet">50</button>
                 <button id="coin-100" onclick="bet">100</button>
             </div>
-    
-            <button id="hitBtn">HIT</button>
-            <button id="stayBtn">STAY</button>
-
-
 
         </div>
 
