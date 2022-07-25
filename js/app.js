@@ -44,21 +44,25 @@ const handsEl = {
 
 const bankEl = document.querySelector('#money-remaining');
 
+const textUpdateEl = document.getElementById('text-update');
+
 // const userHandEl = document.getElementById('p-hand');
 // const dealerHandEl = document.getElementById("d-hand");
 
 
 const shuffledContainerEl = document.getElementById('shuffled-deck-container');
 
+
 /*----- event listeners -----*/
 
 document.querySelector('#btnStart').addEventListener('click', startGame);
 
-document.getElementById('hitBtn').addEventListener('click', hit);
+choicesEl.hit.addEventListener('click', hit);
 
 document.getElementById('stayBtn').addEventListener('click', stay);
 
 // document.getElementById('betBtn').addEventListener('click', *function());
+
 
 
 /*----- functions -----*/
@@ -154,6 +158,7 @@ function startGame(){
     shuffleDeck();
     dealHands();
 
+    textUpdateEl.innerHTML = "";
                                                                          
 }
 
@@ -219,9 +224,56 @@ function checkBJ(){
     }
 }
 
-// check scores logic
-function check(){
-    
+// check scores logic & possible winner
+function checkEndGame(){
+    if (scores.user > scores.dealer) {
+        return textUpdateEl.innerHTML = `Well done! User wins with ${scores.user} points`
+    } else if (scores.dealer > scores.user) {
+        return textUpdateEl.innerHTML = `Dealer wins with ${scores.dealer}. Better luck next time!`
+    } else if (scores.dealer > scores.user){
+        return textUpdateEl.innerHTML = `Thats a tie! User and dealer both have ${scores.user}`
+    } else {
+        return;
+    }
+}
+
+
+function hit(){
+
+    choices.hit = true; 
+
+    userHand.push(masterDeck.pop());
+    console.log(userHand)
+
+    render();
+    newScores();
+    // renderCards(card, players.user);
+    // amendDeck();
+
+    if (scores.user > 21) {
+        return textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
+    } else {
+        dealerTurn();
+    }
+}
+
+function stay() {
+    choices.stay = true;
+    checkEndGame();
+    dealerTurn();
+
+    //check end game
+}
+
+function dealerTurn(){
+    if (scores.dealer < 17) {
+        dealerHand.push(masterDeck.pop());
+    } else if (scores.dealer > 21) {
+        return textUpdateEl.innerHTML = `Dealer busts! User wins!`
+    }
+    else {
+        checkEndGame();
+    }
 }
 
 // function renderCards(card, player){
@@ -234,22 +286,3 @@ function check(){
 // function amendDeck(){
 
 // };
-
-function hit(){
-
-    choices.hit = true; 
-    
-    let card = masterDeck.pop();
-    console.log(card, "new card");
-
-    userHand.push(card);
-    // renderCards(card, players.user);
-    // newScores();
-    //amendDeck();
-
-}
-
-function stay(){
-    choices.stay = true;
-    // console.log('true'); -- logs twice?
-}
