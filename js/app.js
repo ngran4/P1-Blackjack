@@ -19,7 +19,7 @@ let choices;
 // let shuffledDeck;
 let bank;
 
-let players;
+// let players;
 
 // let handTotal; (dealer, player)
 
@@ -28,7 +28,7 @@ let players;
 /*----- cached element references -----*/
 
 const scoresEl = {
-    player: document.getElementById('p-score'),
+    user: document.getElementById('p-score'),
     dealer: document.getElementById('d-score')
 };
 
@@ -38,24 +38,25 @@ const choicesEl = {
 };
 
 const handsEl = {
-    player: document.getElementById('p-hand'),
+    user: document.getElementById('p-hand'),
     dealer: document.getElementById('d-hand')
 }
 
 const bankEl = document.querySelector('#money-remaining');
 
-// const playerEl = document.querySelector('#player');
+// const userHandEl = document.getElementById('p-hand');
+// const dealerHandEl = document.getElementById("d-hand");
 
 
 const shuffledContainerEl = document.getElementById('shuffled-deck-container');
 
 /*----- event listeners -----*/
 
-document.querySelector('#start').addEventListener('click', startGame);
+document.querySelector('#btnStart').addEventListener('click', startGame);
 
-// document.getElementById('hitBtn').addEventListener('click', *function());
+document.getElementById('hitBtn').addEventListener('click', hit);
 
-// document.getElementById('stayBtn').addEventListener('click', *function());
+document.getElementById('stayBtn').addEventListener('click', stay);
 
 // document.getElementById('betBtn').addEventListener('click', *function());
 
@@ -75,6 +76,11 @@ function buildMasterDeck() {
       });
     });
     return deck;
+}
+
+
+function cardValues(card){
+
 }
 
 function shuffleDeck() {
@@ -100,16 +106,13 @@ function init(){
     buildMasterDeck();
     shuffleDeck();
 
-    players = {
-        user: {
-            score: 0,
-            hand: [],
-        },
-        dealer: {
-            score: 0,
-            hand: []
-        }
+    scores = {
+        user: 0,
+        dealer: 0
     }
+ 
+    userHand = [];
+    dealerHand = [];
  
     choices = {
         hit: false,
@@ -119,41 +122,35 @@ function init(){
     winner = null;
 
     bank = 500;
+    bankEl.innerText = `Bank: $ ${bank}`;
 
     render()
 };
-
-console.log(init)
 
 
 function render(){
     // Take state variables and update the DOM with their values
 
     // Update the scores on the page 
-    scoresEl.player.innerText = players.user.score;
-    scoresEl.dealer.innerText = players.dealer.score;
+    scoresEl.user.innerText = scores.user;
+    scoresEl.dealer.innerText = scores.dealer;
 
     // update bank
-    bankEl.innerText = bank;
+    // bankEl.innerText = bank;
 
-    for (let choice in choices) {
-        console.log(choice, "key name on object")
-        console.log(choices[choice], "<- choices[choice]")
+    // for (let choice in choices) {
+    //     console.log(choice, "key name on object")
+    //     console.log(choices[choice], "<- choices[choice]")
 
-        // choicesEl[choice].hit
-    }
+    //     // choicesEl[choice].hit
+    // }
 
 }
-
-
 
 function startGame(){
-    
     dealHands();
-
-
+                                                                         
 }
-
 
 function dealHands(){
     // deal 2 cards per party
@@ -161,30 +158,81 @@ function dealHands(){
 
     for (let i=0; i<2; i++) {
 
-        for (let x=0; x<2; x++) {
-            
-            let card = masterDeck.pop();
-            playerHand.push(card);
-            dealerHand.push(card);
-            renderCards(card, x);
-            newScores();
-        }
+        let card = masterDeck.pop();
+        console.log(card, "card");
+
+        userHand.push(card);
+        dealerHand.push(card);
+        // renderCards(card, player);
+        // newScores();
+        // check();
     }
-    amendDeck();
+
+    // amendDeck();
 }
 
-// function newScores() {
-    
+// function check(){
+
+//     if (scores.user === 21) {
+//         return "BLACKJACK! User wins!";
+//     } else if (scores.dealer === 21){
+//         return "BLACKJACK! Dealer wins!";
+//     } else {
+//         return;
+//     }
+// }
+
+// calcutlate total value of hands
+function calcHands(hand){
+    console.log('hand total')
+    let points = 0;
+    // let acePresent = false; 
+
+    for (let i=0; i < hand.length; i++) {
+       let card = hand[i];
+       points +=
+    }
+
+    return points;
+}
+
+function newScores() {
+
+    for (let i=0; i<2; i++) {
+        calcUserScore();
+        calcDealerScore();
+        scoresEl.user.innerHTML = scores.user;
+        scoresEl.dealer.innerHTML = scores.dealer;
+    }
+};
+
+
+// function renderCards(card, player){
+//     let pHand = playerHandEl.innerHTML
+
+//     let
 // };
 
-function renderCards(){
-
-};
 
 // function amendDeck(){
 
 // };
 
-// hit()
+function hit(){
 
-// deal()
+    choices.hit = true; 
+    
+    let card = masterDeck.pop();
+    console.log(card, "new card");
+
+    userHand.push(card);
+    // renderCards(card, players.user);
+    // newScores();
+    //amendDeck();
+
+}
+
+function stay(){
+    choices.stay = true;
+    // console.log('true'); -- logs twice?
+}
