@@ -104,7 +104,6 @@ function init(){
     console.log('init function invoked')
 
     buildMasterDeck();
-    shuffleDeck();
 
     scores = {
         user: 0,
@@ -144,11 +143,17 @@ function render(){
 
     //     // choicesEl[choice].hit
     // }
+    // const userScore = calcHands(userHand);
+    // const dealerScore = calcHands(dealerHand);  
 
 }
 
 function startGame(){
+
+    // hide start button?
+    shuffleDeck();
     dealHands();
+
                                                                          
 }
 
@@ -156,56 +161,68 @@ function dealHands(){
     // deal 2 cards per party
     // create a card variable
 
-    for (let i=0; i<2; i++) {
-
+    for (let i=0; i<1; i++) {
+        
         let card = masterDeck.pop();
         console.log(card, "card");
 
         userHand.push(card);
-        dealerHand.push(card);
-        // renderCards(card, player);
-        // newScores();
-        // check();
     }
 
+    for (let i=0; i<1; i++) {
+        
+        let card = masterDeck.pop();
+        console.log(card, "card");
+
+        dealerHand.push(card);
+    }
+
+    // renderCards(card, player);
+    newScores();
+    checkBJ();
     // amendDeck();
+    render()
 }
-
-// function check(){
-
-//     if (scores.user === 21) {
-//         return "BLACKJACK! User wins!";
-//     } else if (scores.dealer === 21){
-//         return "BLACKJACK! Dealer wins!";
-//     } else {
-//         return;
-//     }
-// }
 
 // calcutlate total value of hands
 function calcHands(hand){
-    console.log('hand total')
     let points = 0;
-    // let acePresent = false; 
+    let acePresent = false; 
 
     for (let i=0; i < hand.length; i++) {
        let card = hand[i];
-       points +=
-    }
+       points += hand[i].value;
 
+    //    if(card.value === "A") {
+    //     acePresent = true;
+    //    }
+    }
     return points;
 }
 
 function newScores() {
-
-    for (let i=0; i<2; i++) {
-        calcUserScore();
-        calcDealerScore();
-        scoresEl.user.innerHTML = scores.user;
-        scoresEl.dealer.innerHTML = scores.dealer;
-    }
+    scores.user = calcHands(userHand);
+    scores.dealer = calcHands(dealerHand);
 };
 
+// check if blackjack was hit
+function checkBJ(){
+
+    newScores();
+
+    if (scores.user === 21) {
+        return "BLACKJACK! User wins!";
+    } else if (scores.dealer === 21){
+        return "BLACKJACK! Dealer wins!";
+    } else {
+        return;
+    }
+}
+
+// check scores logic
+function check(){
+    
+}
 
 // function renderCards(card, player){
 //     let pHand = playerHandEl.innerHTML
