@@ -18,6 +18,9 @@ let winner;
 let choices;
 // let shuffledDeck;
 let bank;
+let wins;
+let ties;
+let losses;
 
 // let players;
 
@@ -83,10 +86,6 @@ function buildMasterDeck() {
 }
 
 
-function cardValues(card){
-
-}
-
 function shuffleDeck() {
     // Create a copy of the masterDeck (leave masterDeck untouched!)
     const tempDeck = [...masterDeck];
@@ -109,20 +108,11 @@ function init(){
 
     buildMasterDeck();
 
-    scores = {
-        user: 0,
-        dealer: 0
-    }
- 
-    userHand = [];
-    dealerHand = [];
- 
-    choices = {
-        hit: false,
-        stay: false
-    }
-
     winner = null;
+
+    wins = 0;
+    ties = 0;
+    losses = 0;
 
     bank = 500;
     bankEl.innerText = `Bank: $ ${bank}`;
@@ -153,12 +143,27 @@ function render(){
 }
 
 function startGame(){
-
     // hide start button?
-    shuffleDeck();
-    dealHands();
+
+    scores = {
+        user: 0,
+        dealer: 0
+    }
+ 
+    userHand = [];
+    dealerHand = [];
+ 
+    choices = {
+        hit: false,
+        stay: false
+    }
+    
+    let gameWon = false;
 
     textUpdateEl.innerHTML = "";
+
+    shuffleDeck();
+    dealHands();
                                                                          
 }
 
@@ -215,10 +220,18 @@ function checkBJ(){
 
     newScores();
 
-    if (scores.user === 21) {
-        return "BLACKJACK! User wins!";
+    if (scores.user === scores.dealer) {
+        ties += 1;
+        gameWon = false;
+        textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`
+    } else if (scores.user === 21) {
+        wins += 1;
+        gameWon = true; 
+        textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
     } else if (scores.dealer === 21){
-        return "BLACKJACK! Dealer wins!";
+        losses += 1;
+        gameWon = false;
+        textUpdateEl.innerHTML = `BLACKJACK! Dealer wins!`;
     } else {
         return;
     }
@@ -226,12 +239,19 @@ function checkBJ(){
 
 // check scores logic & possible winner
 function checkEndGame(){
-    if (scores.user > scores.dealer) {
-        return textUpdateEl.innerHTML = `Well done! User wins with ${scores.user} points`
+    
+    if (scores.dealer === scores.user){
+        ties += 1;
+        gameWon = false;
+        textUpdateEl.innerHTML = `Thats a tie! User and dealer both have ${scores.user}`
+    } else if (scores.user > scores.dealer) {
+        wins += 1;
+        gameWon = true; 
+        textUpdateEl.innerHTML = `Well done! User wins with ${scores.user} points`
     } else if (scores.dealer > scores.user) {
-        return textUpdateEl.innerHTML = `Dealer wins with ${scores.dealer}. Better luck next time!`
-    } else if (scores.dealer > scores.user){
-        return textUpdateEl.innerHTML = `Thats a tie! User and dealer both have ${scores.user}`
+        losses += 1;
+        gameWon = false;
+        textUpdateEl.innerHTML = `Dealer wins with ${scores.dealer}. Better luck next time!`
     } else {
         return;
     }
@@ -252,8 +272,8 @@ function hit(){
 
     if (scores.user > 21) {
         return textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
-    } else {
-        dealerTurn();
+    } else if (scores.user === 21) {
+       //***create winner fuction?
     }
 }
 
