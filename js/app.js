@@ -1,4 +1,4 @@
-/*----- constants -----*/
+/*------------------------------- constants -------------------------------*/
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
@@ -12,23 +12,21 @@ const masterDeck = buildMasterDeck();
 // const betBtn; (? different buttons for different bets—i.e chip values?
 
 
-/*----- app's state (variables) -----*/
+/*------------------------------- app's state (variables) -------------------------------*/
 let scores; 
 let winner;
 let choices;
 // let shuffledDeck;
 let bank;
-let wins;
-let ties;
-let losses;
 
-// let players;
+let wins = 0;
+let losses = 0;
+let ties = 0;
 
 // let handTotal; (dealer, player)
 
-// let doubleBtn;
 
-/*----- cached element references -----*/
+/*------------------------------- cached element references -------------------------------*/
 
 const scoresEl = {
     user: document.getElementById('p-score'),
@@ -43,22 +41,18 @@ const choicesEl = {
 const handsEl = {
     user: document.getElementById('p-hand'),
     dealer: document.getElementById('d-hand')
-}
+};
 
 const bankEl = document.querySelector('#money-remaining');
-
 const textUpdateEl = document.getElementById('text-update');
-
-// const userHandEl = document.getElementById('p-hand');
-// const dealerHandEl = document.getElementById("d-hand");
-
-
 const shuffledContainerEl = document.getElementById('shuffled-deck-container');
+const scoreboardEl = document.getElementById('scoreboard');
+const startBtnEl = document.getElementById("startBtn");
 
 
-/*----- event listeners -----*/
+/*------------------------------- event listeners -------------------------------*/
 
-document.querySelector('#btnStart').addEventListener('click', startGame);
+document.querySelector('#startBtn').addEventListener('click', startGame);
 
 choicesEl.hit.addEventListener('click', hit);
 
@@ -68,7 +62,80 @@ document.getElementById('stayBtn').addEventListener('click', stay);
 
 
 
-/*----- functions -----*/
+/*------------------------------- functions -------------------------------*/
+
+// initialize
+init()
+
+function init(){
+    console.log('init function invoked')
+    // hide hit/stay buttons until game is started
+
+    buildMasterDeck();
+    shuffleDeck();
+
+    scores = {
+        user: 0,
+        dealer: 0
+    }
+ 
+    userHand = [];
+    dealerHand = [];
+ 
+    choices = {
+        hit: false,
+        stay: false
+    }
+
+    winner = null;
+
+    bank = 500;
+    bankEl.innerText = `Bank: $ ${bank}`;
+
+    document.getElementById("stayBtn").style.display="none";
+    document.getElementById("hitBtn").style.display="none";
+
+    render()
+};
+
+function startGame(){
+    // hide start button once clicked
+    startBtnEl.style.display = "none";
+    // reveal choice buttons
+    document.getElementById("stayBtn").style.display="inline";
+    document.getElementById("hitBtn").style.display="inline";
+
+    // reset text + scores + hands
+    userHand = [];
+    dealerHand = [];
+    textUpdateEl.innerHTML = "";
+    scores = {
+        user: 0,
+        dealer: 0
+    }
+    shuffleDeck();
+    dealHands();     
+    
+        // check for win 
+        if (calcHands(userHand) === 21) {
+            wins += 1;
+            textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
+            scoreboard();
+            gameWon = true;
+            return;
+        }
+    
+        // check for win
+        if (calcHands(dealerHand) === 21) {
+            losses += 1;
+            textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
+            scoreboard();
+            gameWon = true; 
+            return;
+        }
+    
+}
+
 function buildMasterDeck() {
     const deck = [];
     // Use nested forEach to generate card objects
@@ -100,27 +167,6 @@ function shuffleDeck() {
 }
 
 
-// initialize
-init()
-
-function init(){
-    console.log('init function invoked')
-
-    buildMasterDeck();
-
-    winner = null;
-
-    wins = 0;
-    ties = 0;
-    losses = 0;
-
-    bank = 500;
-    bankEl.innerText = `Bank: $ ${bank}`;
-
-    render()
-};
-
-
 function render(){
     // Take state variables and update the DOM with their values
 
@@ -142,44 +188,29 @@ function render(){
 
 }
 
-function startGame(){
-    // hide start button?
+// Render hands of player and dealer to screen
+function renderCards(){
+    let render = "";
+    let pHand = handsEl.user.innerHTML;
+    let dHand = handsEl.user.innerHTML;
 
-    scores = {
-        user: 0,
-        dealer: 0
-    }
- 
-    userHand = [];
-    dealerHand = [];
- 
-    choices = {
-        hit: false,
-        stay: false
-    }
     
-    let gameWon = false;
-
-    textUpdateEl.innerHTML = "";
-
-    shuffleDeck();
-    dealHands();
-                                                                         
-}
+};
+ 
 
 function dealHands(){
     // deal 2 cards per party
     // create a card variable
 
-    for (let i=0; i<1; i++) {
+    for (let i=0; i<2; i++) {
         
         let card = masterDeck.pop();
         console.log(card, "card");
 
         userHand.push(card);
     }
-
-    for (let i=0; i<1; i++) {
+    
+    for (let i=0; i<2; i++) {
         
         let card = masterDeck.pop();
         console.log(card, "card");
@@ -187,26 +218,39 @@ function dealHands(){
         dealerHand.push(card);
     }
 
+    newScores();
+    
+    // if no winners...
+
     // renderCards(card, player);
     newScores();
-    checkBJ();
     // amendDeck();
     render()
 }
 
+
+
 // calcutlate total value of hands
 function calcHands(hand){
     let points = 0;
-    let acePresent = false; 
+    let acePresent = 0; // check if ace(s) present
 
     for (let i=0; i < hand.length; i++) {
        let card = hand[i];
        points += hand[i].value;
 
-    //    if(card.value === "A") {
-    //     acePresent = true;
-    //    }
+        if (hand[i].value == 11) {
+            acePresent += 1;
+        }
     }
+
+    // if ace is present and will cause a bust, subtract 10 from value
+    for (let a = 0; a < acePresent; a++) {
+        if (points > 21) {
+            points -= 10;
+        }
+    }
+
     return points;
 }
 
@@ -215,27 +259,27 @@ function newScores() {
     scores.dealer = calcHands(dealerHand);
 };
 
-// check if blackjack was hit
-function checkBJ(){
+// // check if blackjack was hit
+// function checkBJ(){
 
-    newScores();
+//     newScores();
 
-    if (scores.user === scores.dealer) {
-        ties += 1;
-        gameWon = false;
-        textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`
-    } else if (scores.user === 21) {
-        wins += 1;
-        gameWon = true; 
-        textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
-    } else if (scores.dealer === 21){
-        losses += 1;
-        gameWon = false;
-        textUpdateEl.innerHTML = `BLACKJACK! Dealer wins!`;
-    } else {
-        return;
-    }
-}
+//     if (scores.user === scores.dealer) {
+//         ties += 1;
+//         gameWon = false;
+//         textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`
+//     } else if (scores.user === 21) {
+//         wins += 1;
+//         gameWon = true; 
+//         textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
+//     } else if (scores.dealer === 21){
+//         losses += 1;
+//         gameWon = false;
+//         textUpdateEl.innerHTML = `BLACKJACK! Dealer wins!`;
+//     } else {
+//         return;
+//     }
+// }
 
 // check scores logic & possible winner
 function checkEndGame(){
@@ -260,21 +304,27 @@ function checkEndGame(){
 
 function hit(){
 
+    if (gameWon = true) {
+        console.log('game already over');
+        return;
+    }
+
     choices.hit = true; 
 
     userHand.push(masterDeck.pop());
     console.log(userHand)
 
-    render();
-    newScores();
     // renderCards(card, players.user);
     // amendDeck();
 
     if (scores.user > 21) {
         return textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
-    } else if (scores.user === 21) {
-       //***create winner fuction?
-    }
+    } 
+
+    newScores();
+    dealerTurn();
+    render();
+   
 }
 
 function stay() {
@@ -296,12 +346,11 @@ function dealerTurn(){
     }
 }
 
-// function renderCards(card, player){
-//     let pHand = playerHandEl.innerHTML
+// update scoreboard
+function scoreboard(){
+    scoreboardEl.innerHTML = `Wins: ${wins} Losses: ${losses} Ties: ${ties}`;
 
-//     let
-// };
-
+};
 
 // function amendDeck(){
 
