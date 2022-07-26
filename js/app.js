@@ -15,7 +15,6 @@ const masterDeck = buildMasterDeck();
 /*------------------------------- app's state (variables) -------------------------------*/
 let scores; 
 let winner;
-let choices;
 // let shuffledDeck;
 let bank;
 
@@ -81,11 +80,6 @@ function init(){
  
     userHand = [];
     dealerHand = [];
- 
-    choices = {
-        hit: false,
-        stay: false
-    }
 
     winner = null;
 
@@ -95,7 +89,7 @@ function init(){
     document.getElementById("stayBtn").style.display="none";
     document.getElementById("hitBtn").style.display="none";
 
-    render()
+    render();
 };
 
 function startGame(){
@@ -119,21 +113,22 @@ function startGame(){
         // check for win 
         if (calcHands(userHand) === 21) {
             wins += 1;
+            gameOver = true;
             textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
             scoreboard();
-            gameWon = true;
+            newGame();
             return;
         }
     
         // check for win
         if (calcHands(dealerHand) === 21) {
             losses += 1;
+            gameOver = true; 
             textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
             scoreboard();
-            gameWon = true; 
+            newGame();
             return;
         }
-    
 }
 
 function buildMasterDeck() {
@@ -259,92 +254,60 @@ function newScores() {
     scores.dealer = calcHands(dealerHand);
 };
 
-// // check if blackjack was hit
-// function checkBJ(){
 
-//     newScores();
-
-//     if (scores.user === scores.dealer) {
-//         ties += 1;
-//         gameWon = false;
-//         textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`
-//     } else if (scores.user === 21) {
-//         wins += 1;
-//         gameWon = true; 
-//         textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
-//     } else if (scores.dealer === 21){
-//         losses += 1;
-//         gameWon = false;
-//         textUpdateEl.innerHTML = `BLACKJACK! Dealer wins!`;
-//     } else {
-//         return;
-//     }
-// }
-
-// check scores logic & possible winner
-function checkEndGame(){
-    
-    if (scores.dealer === scores.user){
-        ties += 1;
-        gameWon = false;
-        textUpdateEl.innerHTML = `Thats a tie! User and dealer both have ${scores.user}`
-    } else if (scores.user > scores.dealer) {
-        wins += 1;
-        gameWon = true; 
-        textUpdateEl.innerHTML = `Well done! User wins with ${scores.user} points`
-    } else if (scores.dealer > scores.user) {
-        losses += 1;
-        gameWon = false;
-        textUpdateEl.innerHTML = `Dealer wins with ${scores.dealer}. Better luck next time!`
-    } else {
-        return;
-    }
-}
-
-
+// player chose hit 
 function hit(){
-
-    if (gameWon = true) {
-        console.log('game already over');
-        return;
-    }
-
-    choices.hit = true; 
-
+    // deal card to user
     userHand.push(masterDeck.pop());
-    console.log(userHand)
+    console.log(userHand); 
 
-    // renderCards(card, players.user);
-    // amendDeck();
-
+    // renderCards(card);
+   
     if (scores.user > 21) {
-        return textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
+        bust();
+    } else if (scores.user === 21){
+        userWin();
     } 
 
     newScores();
-    dealerTurn();
     render();
+
+    // amendDeck();
    
 }
 
 function stay() {
-    choices.stay = true;
-    checkEndGame();
-    dealerTurn();
-
-    //check end game
-}
-
-function dealerTurn(){
-    if (scores.dealer < 17) {
-        dealerHand.push(masterDeck.pop());
-    } else if (scores.dealer > 21) {
-        return textUpdateEl.innerHTML = `Dealer busts! User wins!`
-    }
-    else {
+    // if dealer has more than 16, dealer stays
+    if (scores.dealer > 16 && scores.dealer <= 21) {
         checkEndGame();
+    } else if (scores.dealer < 17) { // if dealer had less than 17, hit
+        dealerHand.push(masterDeck.pop());
+        newScores();
+        if (scores.dealer > 21) {
+            bust();
+        } else {
+            checkEndGame();
+        }
     }
+    
+    if (gameOver = true) {
+        newGame();
+    }
+
+    newScores();
+    render();
 }
+
+// function dealerTurn(){
+//     if (scores.dealer < 17) {
+//         dealerHand.push(masterDeck.pop());
+//     } else if (scores.dealer > 21) {
+//         return textUpdateEl.innerHTML = `Dealer busts! User wins!`
+//     }
+//     else {
+//         checkEndGame();
+//     }
+// }
 
 // update scoreboard
 function scoreboard(){
@@ -352,6 +315,86 @@ function scoreboard(){
 
 };
 
+function bust(){
+    losses += 1;
+    textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
+    gameOver = true;
+    scoreboard();
+    newGame();
+    return;
+}
+
+function tie(){
+    ties += 1;
+    gameOver = true;
+    textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`;
+    scoreboard();
+    newGame();
+    return;
+}
+
+function userWin(){
+    wins += 1;
+    gameOver = true; 
+    textUpdateEl.innerHTML = `Well done! User wins with ${scores.user} points`
+    scoreboard();
+    newGame();
+    return;
+}
+
+function dealerWin(){
+    losses += 1;
+    gameOver = true;
+    textUpdateEl.innerHTML = `Dealer wins with ${scores.dealer}. Better luck next time!`
+    scoreboard();
+    newGame();
+    return;
+}
+
+function newGame(){
+     // reveal start button 
+     startBtnEl.style.display = "block";
+     // hide choice buttons
+     document.getElementById("stayBtn").style.display="none";
+     document.getElementById("hitBtn").style.display="none";
+}
+
+// check scores logic & possible winner
+function checkEndGame(){
+    
+    if (scores.dealer === scores.user){
+        tie();
+        return;
+    } else if (scores.user > scores.dealer) {
+       userWin();
+       return;
+    } else if (scores.dealer > scores.user) {
+       dealerWin();
+       return;
+    }
+}
+
+
 // function amendDeck(){
 
 // };
+
+
+// // check if blackjack was hit
+// function checkBJ(){
+
+//     newScores();
+
+//     if (scores.user === scores.dealer) {
+//         
+//         textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`
+//     } else if (scores.user === 21) {
+//     
+//         textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
+//     } else if (scores.dealer === 21){
+//         
+//         textUpdateEl.innerHTML = `BLACKJACK! Dealer wins!`;
+//     } else {
+//         return;
+//     }
+// }
