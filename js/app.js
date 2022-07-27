@@ -4,6 +4,7 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 
 // Build a 'master' deck of 'card' objects used to create shuffled decks
 const masterDeck = buildMasterDeck();
+const shuffledDeck = shuffleDeck();
 
 // const stayBtn;
 
@@ -28,7 +29,7 @@ let ties = 0;
 /*------------------------------- cached element references -------------------------------*/
 
 const scoresEl = {
-    user: document.getElementById('p-score'),
+    user: document.getElementById('u-score'),
     dealer: document.getElementById('d-score')
 };
 
@@ -38,7 +39,7 @@ const choicesEl = {
 };
 
 const handsEl = {
-    user: document.getElementById('p-hand'),
+    user: document.getElementById('u-hand'),
     dealer: document.getElementById('d-hand')
 };
 
@@ -71,7 +72,6 @@ function init(){
     // hide hit/stay buttons until game is started
 
     buildMasterDeck();
-    shuffleDeck();
 
     scores = {
         user: 0,
@@ -107,7 +107,6 @@ function startGame(){
         user: 0,
         dealer: 0
     }
-    shuffleDeck();
     dealHands();     
     
         // check for win 
@@ -115,7 +114,7 @@ function startGame(){
             wins += 1;
             gameOver = true;
             textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
-            scoreboard();
+            renderScoreboard();
             newGame();
             return;
         }
@@ -125,7 +124,7 @@ function startGame(){
             losses += 1;
             gameOver = true; 
             textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
-            scoreboard();
+            renderScoreboard();
             newGame();
             return;
         }
@@ -169,27 +168,34 @@ function render(){
     scoresEl.user.innerText = scores.user;
     scoresEl.dealer.innerText = scores.dealer;
 
+    renderScoreboard();
+    renderCards();
+
     // update bank
     // bankEl.innerText = bank;
 
-    // for (let choice in choices) {
-    //     console.log(choice, "key name on object")
-    //     console.log(choices[choice], "<- choices[choice]")
-
-    //     // choicesEl[choice].hit
-    // }
     // const userScore = calcHands(userHand);
     // const dealerScore = calcHands(dealerHand);  
 
 }
 
 // Render hands of player and dealer to screen
-function renderCards(){
-    let render = "";
-    let pHand = handsEl.user.innerHTML;
-    let dHand = handsEl.user.innerHTML;
+function renderCards(card){
 
-    
+    let uContainer = '';
+    handsEl.user.innerHTML = '';
+    userHand.forEach(function(card) {
+        uContainer += '<div class ="card ${card.face}"></div>'
+    });
+    handsEl.user.innerHTML = uContainer;
+
+    let dContainer = '';
+    handsEl.dealer.innerHTML = '';
+    dealerHand.forEach(function(card) {
+        dContainer += '<div class ="card ${card.face}"></div>'
+    });
+    handsEl.dealer.innerHTML = dContainer;
+
 };
  
 
@@ -199,7 +205,7 @@ function dealHands(){
 
     for (let i=0; i<2; i++) {
         
-        let card = masterDeck.pop();
+        let card = shuffledDeck.pop();
         console.log(card, "card");
 
         userHand.push(card);
@@ -207,23 +213,20 @@ function dealHands(){
     
     for (let i=0; i<2; i++) {
         
-        let card = masterDeck.pop();
+        let card = shuffledDeck.pop();
         console.log(card, "card");
 
         dealerHand.push(card);
     }
 
-    newScores();
     
     // if no winners...
 
     // renderCards(card, player);
-    newScores();
+    renderScores();
     // amendDeck();
-    render()
+    render();
 }
-
-
 
 // calcutlate total value of hands
 function calcHands(hand){
@@ -249,7 +252,7 @@ function calcHands(hand){
     return points;
 }
 
-function newScores() {
+function renderScores() {
     scores.user = calcHands(userHand);
     scores.dealer = calcHands(dealerHand);
 };
@@ -258,7 +261,7 @@ function newScores() {
 // player chose hit 
 function hit(){
     // deal card to user
-    userHand.push(masterDeck.pop());
+    userHand.push(shuffledDeck.pop());
     console.log(userHand); 
 
     // renderCards(card);
@@ -269,7 +272,7 @@ function hit(){
         userWin();
     } 
 
-    newScores();
+    renderScores();
     render();
 
     // amendDeck();
@@ -281,8 +284,8 @@ function stay() {
     if (scores.dealer > 16 && scores.dealer <= 21) {
         checkEndGame();
     } else if (scores.dealer < 17) { // if dealer had less than 17, hit
-        dealerHand.push(masterDeck.pop());
-        newScores();
+        dealerHand.push(shuffledDeck.pop());
+        renderScores();
         if (scores.dealer > 21) {
             bust();
         } else {
@@ -294,23 +297,12 @@ function stay() {
         newGame();
     }
 
-    newScores();
+    renderScores();
     render();
 }
 
-// function dealerTurn(){
-//     if (scores.dealer < 17) {
-//         dealerHand.push(masterDeck.pop());
-//     } else if (scores.dealer > 21) {
-//         return textUpdateEl.innerHTML = `Dealer busts! User wins!`
-//     }
-//     else {
-//         checkEndGame();
-//     }
-// }
-
 // update scoreboard
-function scoreboard(){
+function renderScoreboard(){
     scoreboardEl.innerHTML = `Wins: ${wins} Losses: ${losses} Ties: ${ties}`;
 
 };
@@ -319,7 +311,7 @@ function bust(){
     losses += 1;
     textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
     gameOver = true;
-    scoreboard();
+    renderScoreboard();
     newGame();
     return;
 }
@@ -328,7 +320,7 @@ function tie(){
     ties += 1;
     gameOver = true;
     textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`;
-    scoreboard();
+    renderScoreboard();
     newGame();
     return;
 }
@@ -337,7 +329,7 @@ function userWin(){
     wins += 1;
     gameOver = true; 
     textUpdateEl.innerHTML = `Well done! User wins with ${scores.user} points`
-    scoreboard();
+    renderScoreboard();
     newGame();
     return;
 }
@@ -346,7 +338,7 @@ function dealerWin(){
     losses += 1;
     gameOver = true;
     textUpdateEl.innerHTML = `Dealer wins with ${scores.dealer}. Better luck next time!`
-    scoreboard();
+    renderScoreboard();
     newGame();
     return;
 }
@@ -378,23 +370,3 @@ function checkEndGame(){
 // function amendDeck(){
 
 // };
-
-
-// // check if blackjack was hit
-// function checkBJ(){
-
-//     newScores();
-
-//     if (scores.user === scores.dealer) {
-//         
-//         textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`
-//     } else if (scores.user === 21) {
-//     
-//         textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
-//     } else if (scores.dealer === 21){
-//         
-//         textUpdateEl.innerHTML = `BLACKJACK! Dealer wins!`;
-//     } else {
-//         return;
-//     }
-// }
