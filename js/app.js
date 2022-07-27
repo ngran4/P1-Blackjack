@@ -6,9 +6,8 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 const masterDeck = buildMasterDeck();
 const shuffledDeck = shuffleDeck();
 
-// const stayBtn;
+// renderDeckInContainer(masterDeck, document.getElementById('master-deck-container'));
 
-// const hitBtn;
 
 // const betBtn; (? different buttons for different bets—i.e chip values?
 
@@ -23,7 +22,6 @@ let wins = 0;
 let losses = 0;
 let ties = 0;
 
-// let handTotal; (dealer, player)
 
 
 /*------------------------------- cached element references -------------------------------*/
@@ -156,9 +154,28 @@ function shuffleDeck() {
         const rndIdx = Math.floor(Math.random() * tempDeck.length);
 
         newShuffleDeck.push(tempDeck.splice(rndIdx, 1)[0]); // [0] placed after splice to return only the card object--otherwise splice will return array.
-    }                                            // ^ does this need to be 4 to draw 4 cards?
+    }                                            
     return newShuffleDeck;
 }
+
+// Render hands of player and dealer to screen
+function renderCards(){
+
+    let uContainer = '';
+    handsEl.user.innerHTML = '';
+    userHand.forEach(function(card) {
+        uContainer += `<div class ="card ${card.face}"></div>`
+    });
+    handsEl.user.innerHTML = uContainer;
+
+    let dContainer = '';
+    handsEl.dealer.innerHTML = '';
+    dealerHand.forEach(function(card) {
+        dContainer += `<div class ="card ${card.face}"></div>`
+    });
+    handsEl.dealer.innerHTML = dContainer;
+
+};
 
 
 function render(){
@@ -170,7 +187,6 @@ function render(){
 
     renderScoreboard();
     renderCards();
-
     // update bank
     // bankEl.innerText = bank;
 
@@ -179,25 +195,6 @@ function render(){
 
 }
 
-// Render hands of player and dealer to screen
-function renderCards(card){
-
-    let uContainer = '';
-    handsEl.user.innerHTML = '';
-    userHand.forEach(function(card) {
-        uContainer += '<div class ="card ${card.face}"></div>'
-    });
-    handsEl.user.innerHTML = uContainer;
-
-    let dContainer = '';
-    handsEl.dealer.innerHTML = '';
-    dealerHand.forEach(function(card) {
-        dContainer += '<div class ="card ${card.face}"></div>'
-    });
-    handsEl.dealer.innerHTML = dContainer;
-
-};
- 
 
 function dealHands(){
     // deal 2 cards per party
@@ -366,7 +363,3 @@ function checkEndGame(){
     }
 }
 
-
-// function amendDeck(){
-
-// };
