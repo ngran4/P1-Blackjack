@@ -105,6 +105,7 @@ function startGame(){
         user: 0,
         dealer: 0
     }
+    // buildMasterDeck();
     dealHands();     
     
         // check for win 
@@ -121,11 +122,12 @@ function startGame(){
         if (calcHands(dealerHand) === 21) {
             losses += 1;
             gameOver = true; 
-            textUpdateEl.innerHTML = `BLACKJACK! User wins!`;
+            textUpdateEl.innerHTML = `BLACKJACK! Dealer wins!`;
             renderScoreboard();
             newGame();
             return;
         }
+
 }
 
 function buildMasterDeck() {
@@ -185,6 +187,7 @@ function render(){
     scoresEl.user.innerText = scores.user;
     scoresEl.dealer.innerText = scores.dealer;
 
+    // renderScores();
     renderScoreboard();
     renderCards();
     // update bank
@@ -217,9 +220,6 @@ function dealHands(){
     }
 
     
-    // if no winners...
-
-    // renderCards(card, player);
     renderScores();
     // amendDeck();
     render();
@@ -260,18 +260,18 @@ function hit(){
     // deal card to user
     userHand.push(shuffledDeck.pop());
     console.log(userHand); 
+    renderScores();
 
-    // renderCards(card);
-   
     if (scores.user > 21) {
         bust();
+        textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
     } else if (scores.user === 21){
         userWin();
-    } 
-
+    }
+    
     renderScores();
     render();
-
+    return;
     // amendDeck();
    
 }
@@ -285,6 +285,7 @@ function stay() {
         renderScores();
         if (scores.dealer > 21) {
             bust();
+            textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, user wins!`;
         } else {
             checkEndGame();
         }
@@ -306,7 +307,6 @@ function renderScoreboard(){
 
 function bust(){
     losses += 1;
-    textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
     gameOver = true;
     renderScoreboard();
     newGame();
@@ -351,7 +351,10 @@ function newGame(){
 // check scores logic & possible winner
 function checkEndGame(){
     
-    if (scores.dealer === scores.user){
+    if (scores.user > 21) {
+        bust();
+        textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
+    } else if (scores.dealer === scores.user){
         tie();
         return;
     } else if (scores.user > scores.dealer) {
