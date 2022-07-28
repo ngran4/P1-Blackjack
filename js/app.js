@@ -4,7 +4,7 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 
 // Build a 'master' deck of 'card' objects used to create shuffled decks
 const masterDeck = buildMasterDeck();
-const shuffledDeck = shuffleDeck();
+let shuffledDeck = shuffleDeck();
 
 // renderDeckInContainer(masterDeck, document.getElementById('master-deck-container'));
 
@@ -14,7 +14,6 @@ const shuffledDeck = shuffleDeck();
 
 /*------------------------------- app's state (variables) -------------------------------*/
 let scores; 
-let winner;
 // let shuffledDeck;
 let bank;
 
@@ -56,6 +55,9 @@ choicesEl.hit.addEventListener('click', hit);
 
 document.getElementById('stayBtn').addEventListener('click', stay);
 
+document.getElementById("refreshBtn").addEventListener('click', init);
+
+// }
 // document.getElementById('betBtn').addEventListener('click', *function());
 
 
@@ -67,7 +69,12 @@ init()
 
 function init(){
     console.log('init function invoked')
-    // hide hit/stay buttons until game is started
+
+    if (shuffledDeck.length < 5) {
+        let newShuffledDeck = shuffleDeck();
+        shuffledDeck = newShuffledDeck
+        console.log("This is the new shuffled deck")
+    }
 
     buildMasterDeck();
 
@@ -79,11 +86,16 @@ function init(){
     userHand = [];
     dealerHand = [];
 
-    winner = null;
+    let wins = 0;
+    let losses = 0;
+    let ties = 0;
 
     bank = 500;
     bankEl.innerText = `Bank: $ ${bank}`;
 
+    // hide refresh button
+    document.getElementById("refreshBtn").style.display="none";
+    // hide hit/stay buttons until game is started
     document.getElementById("stayBtn").style.display="none";
     document.getElementById("hitBtn").style.display="none";
 
@@ -91,24 +103,31 @@ function init(){
 };
 
 function startGame(){
-    // hide start button once clicked
-    startBtnEl.style.display = "none";
-    // reveal choice buttons
-    document.getElementById("stayBtn").style.display="inline";
-    document.getElementById("hitBtn").style.display="inline";
+    console.log(shuffledDeck.length);
+    if (shuffledDeck.length <= 6){
+    textUpdateEl.innerHTML = "Ran out of cards! Press refresh deck to play again!"
+    document.getElementById("refreshBtn").style.display="block";
 
+    } else {
+
+         // hide start button once clicked
+        startBtnEl.style.display = "none";
+        // reveal choice buttons
+        document.getElementById("stayBtn").style.display="inline";
+        document.getElementById("hitBtn").style.display="inline";
+        
     // reset text + scores + hands
-    userHand = [];
-    dealerHand = [];
-    textUpdateEl.innerHTML = "";
-    scores = {
-        user: 0,
-        dealer: 0
-    }
-    // buildMasterDeck();
-    dealHands();     
-    
-        // check for win 
+        userHand = [];
+        dealerHand = [];
+        textUpdateEl.innerHTML = "";
+        scores = {
+            user: 0,
+            dealer: 0
+        }
+        
+        dealHands();     
+        
+        // check for win on first draw
         if (calcHands(userHand) === 21) {
             wins += 1;
             gameOver = true;
@@ -117,7 +136,7 @@ function startGame(){
             newGame();
             return;
         }
-    
+        
         // check for win
         if (calcHands(dealerHand) === 21) {
             losses += 1;
@@ -127,7 +146,7 @@ function startGame(){
             newGame();
             return;
         }
-
+    }
 }
 
 function buildMasterDeck() {
@@ -149,7 +168,7 @@ function buildMasterDeck() {
 
 function shuffleDeck() {
     // Create a copy of the masterDeck (leave masterDeck untouched!)
-    const tempDeck = [...masterDeck];
+    const tempDeck = [...masterDeck]; 
     const newShuffleDeck = [];
     while (tempDeck.length) {
         // Get random index for a card still in the tempDeck
@@ -159,6 +178,7 @@ function shuffleDeck() {
     }                                            
     return newShuffleDeck;
 }
+
 
 // Render hands of player and dealer to screen
 function renderCards(){
@@ -187,14 +207,8 @@ function render(){
     scoresEl.user.innerText = scores.user;
     scoresEl.dealer.innerText = scores.dealer;
 
-    // renderScores();
     renderScoreboard();
     renderCards();
-    // update bank
-    // bankEl.innerText = bank;
-
-    // const userScore = calcHands(userHand);
-    // const dealerScore = calcHands(dealerHand);  
 
 }
 
@@ -202,6 +216,8 @@ function render(){
 function dealHands(){
     // deal 2 cards per party
     // create a card variable
+
+    console.log(shuffledDeck.length);
 
     for (let i=0; i<2; i++) {
         
@@ -257,6 +273,7 @@ function renderScores() {
 
 // player chose hit 
 function hit(){
+ 
     // deal card to user
     userHand.push(shuffledDeck.pop());
     console.log(userHand); 
@@ -268,7 +285,7 @@ function hit(){
     } else if (scores.user === 21){
         userWin();
     }
-    
+
     renderScores();
     render();
     return;
@@ -284,16 +301,16 @@ function stay() {
         dealerHand.push(shuffledDeck.pop());
         renderScores();
         if (scores.dealer > 21) {
-            bust();
-            textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, user wins!`;
+            dealerBust();
+            textUpdateEl.innerHTML = `Dealer busts! User wins!`;
         } else {
             checkEndGame();
         }
     }
     
-    if (gameOver = true) {
-        newGame();
-    }
+    // if (gameOver = true) {
+    //     newGame();
+    // }
 
     renderScores();
     render();
@@ -307,6 +324,14 @@ function renderScoreboard(){
 
 function bust(){
     losses += 1;
+    gameOver = true;
+    renderScoreboard();
+    newGame();
+    return;
+}
+
+function dealerBust(){
+    wins += 1;
     gameOver = true;
     renderScoreboard();
     newGame();
