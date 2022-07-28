@@ -12,7 +12,7 @@ let scores;
 let bank;
 let wins = 0;
 let losses = 0;
-let ties = 0;
+let draws = 0;
 
 
 
@@ -79,7 +79,7 @@ function init(){
 
     let wins = 0;
     let losses = 0;
-    let ties = 0;
+    let draws = 0;
 
     // hide refresh button
     document.getElementById("refreshBtn").style.display="none";
@@ -303,7 +303,7 @@ function stay() {
 
 // update scoreboard
 function renderScoreboard(){
-    scoreboardEl.innerHTML = `Wins: ${wins} Losses: ${losses} Ties: ${ties}`;
+    scoreboardEl.innerHTML = `Wins: ${wins} Losses: ${losses} Draws: ${draws}`;
 
 };
 
@@ -323,10 +323,10 @@ function dealerBust(){
     return;
 }
 
-function tie(){
-    ties += 1;
+function draw(){
+    draws += 1;
     gameOver = true;
-    textUpdateEl.innerHTML = `Thats a tie! User and dealer both hit Blackjack!`;
+    textUpdateEl.innerHTML = `Thats a draw! User and dealer both hit Blackjack!`;
     renderScoreboard();
     newGame();
     return;
@@ -365,7 +365,7 @@ function checkEndGame(){
         bust();
         textUpdateEl.innerHTML = `Uh oh! ${scores.user} points. That's a bust, dealer wins!`;
     } else if (scores.dealer === scores.user){
-        tie();
+        draw();
         return;
     } else if (scores.user > scores.dealer) {
        userWin();
