@@ -1,7 +1,69 @@
+* { 
+	box-sizing: border-box;
+}
+
 html {
     background: url("../imgs/Blackjack-table.svg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+}
+
+body {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    font-family: 'Cinzel', serif;
+
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 0.7fr;
+    /* grid-template-areas:
+    "title dealer buttons"
+    ". . buttons" 
+    ". user buttons"
+    "scoreboard scoreboard scoreboard";
+    gap: 8px; */
+}
+
+.title { 
+    grid-column: 1 / span 1;
+    grid-row: 1/ span 1;
+
+}
+
+.dealer { 
+    grid-column: 2 / span 1;
+    grid-row: 1/ span 1;
+
+}
+
+.user { 
+    grid-column: 2 / span 1;
+    grid-row: 3/ span 1;
+
+}
+
+.scoreboard { 
+    grid-column: 2 / span 1;
+    grid-row: 4 / span 1;
+
+}
+
+.buttons { 
+    grid-column: 1 / span 1;
+    grid-row: 1/ span 1;
+
+    background-color: #E81F25;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+
+
 }
