@@ -81,9 +81,6 @@ function init(){
     let losses = 0;
     let ties = 0;
 
-    bank = 500;
-    bankEl.innerText = `Bank: $ ${bank}`;
-
     // hide refresh button
     document.getElementById("refreshBtn").style.display="none";
     // hide hit/stay buttons until game is started
@@ -155,6 +152,7 @@ function buildMasterDeck() {
     });
     return deck;
 }
+
 
 function shuffleDeck() {
     // Create a copy of the masterDeck (leave masterDeck untouched!)
