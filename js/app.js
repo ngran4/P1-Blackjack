@@ -4,19 +4,12 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 
 // Build a 'master' deck of 'card' objects used to create shuffled decks
 const masterDeck = buildMasterDeck();
-let shuffledDeck = shuffleDeck();
-
-// renderDeckInContainer(masterDeck, document.getElementById('master-deck-container'));
-
-
-// const betBtn; (? different buttons for different bets—i.e chip values?
+const shuffledDeck = shuffleDeck();
 
 
 /*------------------------------- app's state (variables) -------------------------------*/
 let scores; 
-// let shuffledDeck;
 let bank;
-
 let wins = 0;
 let losses = 0;
 let ties = 0;
@@ -57,8 +50,6 @@ document.getElementById('stayBtn').addEventListener('click', stay);
 
 document.getElementById("refreshBtn").addEventListener('click', init);
 
-// }
-// document.getElementById('betBtn').addEventListener('click', *function());
 
 
 
@@ -165,7 +156,6 @@ function buildMasterDeck() {
     return deck;
 }
 
-
 function shuffleDeck() {
     // Create a copy of the masterDeck (leave masterDeck untouched!)
     const tempDeck = [...masterDeck]; 
@@ -265,6 +255,7 @@ function calcHands(hand){
     return points;
 }
 
+// Render scores to screen
 function renderScores() {
     scores.user = calcHands(userHand);
     scores.dealer = calcHands(dealerHand);
@@ -307,10 +298,6 @@ function stay() {
             checkEndGame();
         }
     }
-    
-    // if (gameOver = true) {
-    //     newGame();
-    // }
 
     renderScores();
     render();
