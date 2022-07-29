@@ -32,7 +32,6 @@ const handsEl = {
     dealer: document.getElementById('d-hand')
 };
 
-const bankEl = document.querySelector('#money-remaining');
 const textUpdateEl = document.getElementById('text-update');
 const shuffledContainerEl = document.getElementById('shuffled-deck-container');
 const scoreboardEl = document.getElementById('scoreboard');
@@ -188,7 +187,6 @@ function renderCards(){
 
 };
 
-
 function render(){
     // Take state variables and update the DOM with their values
 
@@ -200,7 +198,6 @@ function render(){
     renderCards();
 
 };
-
 
 function dealHands(){
     // deal 2 cards per party
@@ -287,15 +284,19 @@ function hit(){
 
 function stay() {
     // if dealer has more than 16, dealer stays
+    
     if (scores.dealer > 16 && scores.dealer <= 21) {
         checkEndGame();
     } else if (scores.dealer < 17) { // if dealer had less than 17, hit
         dealerHand.push(shuffledDeck.pop());
         renderScores();
-        if (scores.dealer > 21) {
+        if (scores.dealer <17){
+            dealerHand.push(shuffledDeck.pop());
+            renderScores(); // add if here to check if score is still < 17, if so must loop again 
+        } else if (scores.dealer > 21) {
             dealerBust();
             textUpdateEl.innerHTML = `Dealer busts! User wins!`;
-        } else {
+        } else {   
             checkEndGame();
         }
     }
