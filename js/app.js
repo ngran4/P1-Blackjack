@@ -51,7 +51,6 @@ document.getElementById("refreshBtn").addEventListener('click', init);
 
 
 
-
 /*------------------------------- functions -------------------------------*/
 
 // initialize
