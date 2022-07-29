@@ -1,26 +1,6 @@
 * { 
 	box-sizing: border-box;
 }
-/* 
-body {
-    display: grid;
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    justify-content: center;
-    align-content: center;
-    margin: 0;
-    font-family: 'Cinzel', serif;
-
-    grid-template-columns: 25% 50% 25%;
-    grid-template-rows: 25% 25% 25% 25%;
-    /* grid-template-areas:
-    "title dealer buttons"
-    ". . buttons" 
-    ". user buttons"
-    "scoreboard scoreboard scoreboard";
-    gap: 8px; */
-/* } */ 
 
 .container{
     display: flex;
