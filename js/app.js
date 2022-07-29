@@ -59,7 +59,7 @@ init()
 function init(){
     console.log('init function invoked')
 
-    if (shuffledDeck.length < 5) {
+    if (shuffledDeck.length < 7) {
         let newShuffledDeck = shuffleDeck();
         shuffledDeck = newShuffledDeck
         console.log("This is the new shuffled deck")
@@ -224,7 +224,6 @@ function dealHands(){
         dealerHand.push(card);
     }
 
-    
     renderScores();
     render();
 }
