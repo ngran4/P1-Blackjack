@@ -23,8 +23,15 @@ A Javascript based Blackjack game. Objective is to beat the dealer by getting as
 
 https://ngran4.github.io/Project-1---Blackjack/
 
+# Original Wireframe 
+
+![Imgur](https://i.imgur.com/TKsxKm3.png)
+
+![Imgur](https://i.imgur.com/LaEHtiQ.png)
+
 # Next Steps
 - Betting chips/buttons
 - Hide one of dealers cards until player hits/stays
 - Double down option
 - Split option
+
