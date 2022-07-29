@@ -4,7 +4,6 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 
 // Build a 'master' deck of 'card' objects used to create shuffled decks
 const masterDeck = buildMasterDeck();
-let shuffledDeck = shuffleDeck();
 
 
 /*------------------------------- app's state (variables) -------------------------------*/
@@ -13,7 +12,7 @@ let bank;
 let wins = 0;
 let losses = 0;
 let draws = 0;
-
+let shuffledDeck = shuffleDeck();
 
 
 /*------------------------------- cached element references -------------------------------*/
