@@ -66,6 +66,7 @@
 .user > #u-hand{
     display: flex;
     justify-content: center;
+ 
 }
 
 .user > #u-score{
