@@ -4,7 +4,7 @@ const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', '
 
 // Build a 'master' deck of 'card' objects used to create shuffled decks
 const masterDeck = buildMasterDeck();
-const shuffledDeck = shuffleDeck();
+let shuffledDeck = shuffleDeck();
 
 
 /*------------------------------- app's state (variables) -------------------------------*/
@@ -86,6 +86,8 @@ function init(){
     // hide hit/stay buttons until game is started
     document.getElementById("stayBtn").style.display="none";
     document.getElementById("hitBtn").style.display="none";
+    // show new game button
+    startBtnEl.style.display = "block";
 
     render();
 };
@@ -94,6 +96,7 @@ function startGame(){
     console.log(shuffledDeck.length);
     if (shuffledDeck.length <= 6){
     textUpdateEl.innerHTML = "Ran out of cards! Press refresh deck to play again!"
+    startBtnEl.style.display = "none";
     document.getElementById("refreshBtn").style.display="block";
 
     } else {

@@ -127,7 +127,7 @@ body {
 
 }
 
-.buttons > #startBtn{
+.buttons > #startBtn, #refreshBtn{
     margin: 20px;
     background-color: #528251;
     border: none;
