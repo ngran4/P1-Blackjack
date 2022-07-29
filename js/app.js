@@ -54,7 +54,7 @@ document.getElementById("refreshBtn").addEventListener('click', init);
 /*------------------------------- functions -------------------------------*/
 
 // initialize
-init()
+init();
 
 function init(){
     console.log('init function invoked')
@@ -136,7 +136,7 @@ function startGame(){
             return;
         }
     }
-}
+};
 
 function buildMasterDeck() {
     const deck = [];
@@ -152,7 +152,7 @@ function buildMasterDeck() {
       });
     });
     return deck;
-}
+};
 
 
 function shuffleDeck() {
@@ -166,7 +166,7 @@ function shuffleDeck() {
         newShuffleDeck.push(tempDeck.splice(rndIdx, 1)[0]); // [0] placed after splice to return only the card object--otherwise splice will return array.
     }                                            
     return newShuffleDeck;
-}
+};
 
 
 // Render hands of player and dealer to screen
@@ -199,7 +199,7 @@ function render(){
     renderScoreboard();
     renderCards();
 
-}
+};
 
 
 function dealHands(){
@@ -226,7 +226,7 @@ function dealHands(){
 
     renderScores();
     render();
-}
+};
 
 // calcutlate total value of hands
 function calcHands(hand){
@@ -250,7 +250,7 @@ function calcHands(hand){
     }
 
     return points;
-}
+};
 
 // Render scores to screen
 function renderScores() {
@@ -302,7 +302,7 @@ function stay() {
 
     renderScores();
     render();
-}
+};
 
 
 function bust(){
@@ -328,7 +328,7 @@ function draw(){
     renderScoreboard();
     newGame();
     return;
-}
+};
 
 function userWin(){
     wins += 1;
@@ -337,7 +337,7 @@ function userWin(){
     renderScoreboard();
     newGame();
     return;
-}
+};
 
 function dealerWin(){
     losses += 1;
@@ -346,7 +346,7 @@ function dealerWin(){
     renderScoreboard();
     newGame();
     return;
-}
+};
 
 function newGame(){
      // reveal start button 
@@ -354,7 +354,7 @@ function newGame(){
      // hide choice buttons
      document.getElementById("stayBtn").style.display="none";
      document.getElementById("hitBtn").style.display="none";
-}
+};
 
 // check scores logic & possible winner
 function checkEndGame(){
@@ -372,5 +372,5 @@ function checkEndGame(){
        dealerWin();
        return;
     }
-}
+};
 

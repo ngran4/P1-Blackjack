@@ -7,6 +7,7 @@ A Javascript based Blackjack game. Objective is to beat the dealer by getting as
 - HTML
 - CSS
 - Javascript
+- Canva
 
 # Getting Started
 1. Press "New Game" button to begin
