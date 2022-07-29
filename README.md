@@ -25,9 +25,9 @@ https://ngran4.github.io/Project-1---Blackjack/
 
 # Original Wireframe 
 
-![Imgur](https://i.imgur.com/wbtUjPMl.png)
+![Imgur](https://i.imgur.com/wbtUjPMh.png)
 
-![Imgur](https://i.imgur.com/LaEHtiQl.png)
+![Imgur](https://i.imgur.com/LaEHtiQh.png)
 
 # Next Steps
 - Betting chips/buttons
