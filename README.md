@@ -1,8 +1,6 @@
 # Blackjack Browser Game
 A Javascript based Blackjack game. Objective is to beat the dealer by getting as close to 21 points without busting (going over). 
 
-![This is an image](../imgs/Game-UI.png)
-
 # Technologies Used
 - HTML
 - CSS
