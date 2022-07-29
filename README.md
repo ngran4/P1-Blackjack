@@ -25,7 +25,7 @@ https://ngran4.github.io/Project-1---Blackjack/
 
 # Original Wireframe 
 
-![Imgur](https://i.imgur.com/TKsxKm3.png)
+![Imgur](https://i.imgur.com/wbtUjPM.png)
 
 ![Imgur](https://i.imgur.com/LaEHtiQ.png)
 
