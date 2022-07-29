@@ -2,23 +2,18 @@
 	box-sizing: border-box;
 }
 
-html {
-    background: url("../imgs/Blackjack-table.svg") no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
-
 body {
     display: grid;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    justify-content: center;
+    align-content: center;
     margin: 0;
     font-family: 'Cinzel', serif;
 
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 0.7fr;
+    grid-template-columns: 25% 50% 25%;
+    grid-template-rows: 25% 25% 25% 25%;
     /* grid-template-areas:
     "title dealer buttons"
     ". . buttons" 
@@ -27,43 +22,119 @@ body {
     gap: 8px; */
 }
 
-.title { 
-    grid-column: 1 / span 1;
-    grid-row: 1/ span 1;
 
+.title { 
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+    font-size: 30px;
+    font-weight: 900;
+    padding: 15px 15px;
 }
 
 .dealer { 
-    grid-column: 2 / span 1;
-    grid-row: 1/ span 1;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1 / 2;
+    grid-row-end: 2;
+}
 
+.dealer > #d-score{
+    background:#528251;
+
+	padding: 10px 0;
+    border-radius: 50%;
+	margin: 2px;
+	display: inline-block;
+	font-size: 1.25em;
+    color: white;
+	text-align: center;
+	width: 50px;
 }
 
 .user { 
-    grid-column: 2 / span 1;
-    grid-row: 3/ span 1;
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
 
 }
 
+.user > #u-score{
+    background:#528251;
+
+	padding: 10px 0;
+    border-radius: 50%;
+	margin: 2px;
+	display: inline-block;
+	font-size: 1.25em;
+    color: white;
+	text-align: center;
+	width: 50px;
+}
 .scoreboard { 
-    grid-column: 2 / span 1;
-    grid-row: 4 / span 1;
+    grid-column: 2 / 3;
+    grid-row: 4 / 4;
+
+    padding-top: 100px;
+
+    font-size: 20px;
+    font-weight: 600;
+    color: black;
 
 }
 
 .buttons { 
-    grid-column: 1 / span 1;
-    grid-row: 1/ span 1;
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
 
-    background-color: #E81F25;
+}
+
+.buttons > #startBtn{
+    background-color: #528251;
     border: none;
     border-radius: 4px;
     color: white;
-    padding: 10px 20px;
+    padding: 15px 20px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 18px;
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
 
+    grid-column: 3 / span 1;
+    grid-row: 2 / span 1;
+}
 
+.buttons > #hitBtn{
+    background-color: #E81F25;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+}
+
+.buttons > #stayBtn{
+    background-color: #E81F25;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+}
+
+html {
+    background: url("../imgs/Blackjack-table.svg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
