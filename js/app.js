@@ -226,7 +226,6 @@ function dealHands(){
 
     
     renderScores();
-    // amendDeck();
     render();
 }
 
@@ -284,7 +283,6 @@ function hit(){
     renderScores();
     render();
     return;
-    // amendDeck();
    
 }
 
