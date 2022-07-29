@@ -260,6 +260,11 @@ function renderScores() {
     scores.dealer = calcHands(dealerHand);
 };
 
+// update scoreboard
+function renderScoreboard(){
+    scoreboardEl.innerHTML = `Wins: ${wins} Losses: ${losses} Draws: ${draws}`;
+
+};
 
 // player chose hit 
 function hit(){
@@ -302,11 +307,6 @@ function stay() {
     render();
 }
 
-// update scoreboard
-function renderScoreboard(){
-    scoreboardEl.innerHTML = `Wins: ${wins} Losses: ${losses} Draws: ${draws}`;
-
-};
 
 function bust(){
     losses += 1;
