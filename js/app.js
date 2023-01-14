@@ -284,19 +284,15 @@ function hit(){
 
 function stay() {
     // if dealer has more than 16, dealer stays
-    
     if (scores.dealer > 16 && scores.dealer <= 21) {
         checkEndGame();
     } else if (scores.dealer < 17) { // if dealer had less than 17, hit
         dealerHand.push(shuffledDeck.pop());
         renderScores();
-        if (scores.dealer <17){
-            dealerHand.push(shuffledDeck.pop());
-            renderScores(); // add if here to check if score is still < 17, if so must loop again 
-        } else if (scores.dealer > 21) {
+        if (scores.dealer > 21) {
             dealerBust();
             textUpdateEl.innerHTML = `Dealer busts! User wins!`;
-        } else {   
+        } else {   // add else if here to check if score is still < 17, if so must loop again 
             checkEndGame();
         }
     }
